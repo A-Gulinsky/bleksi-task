@@ -1,8 +1,11 @@
 
 import Link from 'next/link'
+import { UserAuth } from '@/context/AuthContext';
 
 export const Navbar = () => {
 
+  const { user } = UserAuth()
+  
   return (
     <nav>
       <ul>
