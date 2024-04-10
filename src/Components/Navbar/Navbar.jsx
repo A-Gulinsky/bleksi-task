@@ -5,7 +5,9 @@ import { UserAuth } from '@/context/AuthContext';
 export const Navbar = () => {
 
   const { user } = UserAuth()
-  
+
+  console.log(process.env.FIREBASE_API_KEY);
+
   return (
     <nav>
       <ul>
