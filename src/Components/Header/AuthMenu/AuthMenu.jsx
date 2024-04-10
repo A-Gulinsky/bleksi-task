@@ -1,13 +1,21 @@
 'use client';
 
+import Image from 'next/image';
+
+// auth context
 import { UserAuth } from '@/context/AuthContext';
+
+// custom hook / emotion styled
 import useAuthenticationLoading from '@/hooks/useAuthenticationLoading';
+import { ButtonSignIn, ButtonSignOut, ButtonText, UserDisplayName, UserDiv } from './AuthMenu.styled';
 
 export const AuthMenu = () => {
   const { user, googleSignIn, logOut } = UserAuth();
 
+  // hook for managing loading state during user authentication process
   const loading = useAuthenticationLoading(user);
 
+  // func signIn
   const handleSignIn = async () => {
     try {
       await googleSignIn();
@@ -16,6 +24,7 @@ export const AuthMenu = () => {
     }
   };
 
+  // func signOut
   const handleSignOut = async () => {
     try {
       await logOut();
@@ -25,17 +34,27 @@ export const AuthMenu = () => {
   };
 
   return (
-    <>
-      {loading ? null : user ? (
-        <div>
-          <p>Welcome</p>
-          <p onClick={handleSignOut}>LOGOUT</p>
-        </div>
+    <div>
+      {loading ? null : !user ? (
+        <ButtonSignIn type="button" onClick={handleSignIn}>
+          Sign In
+        </ButtonSignIn>
       ) : (
-        <ul>
-          <li onClick={handleSignIn}>SignIn</li>
-        </ul>
+        <UserDiv>
+          <UserDisplayName>{user.displayName}</UserDisplayName>
+          <ButtonSignOut type="button" onClick={handleSignOut}>
+            <ButtonText>Logout</ButtonText>
+            <Image
+              src={'logout.svg'}
+              alt="whatsapp link"
+              width={25}
+              height={25}
+              quality={100}
+              priority
+            />
+          </ButtonSignOut>
+        </UserDiv>
       )}
-    </>
+    </div>
   );
 };

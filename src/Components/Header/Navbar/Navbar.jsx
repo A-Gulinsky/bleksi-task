@@ -1,20 +1,34 @@
+'use client'
 
-import Link from 'next/link';
+import { UserAuth } from '@/context/AuthContext';
+import { A, Ul } from './Navbar.styled';
+import useAuthenticationLoading from '@/hooks/useAuthenticationLoading';
 
 export const Navbar = () => {
+
+  // user Data
+  const { user } = UserAuth();
+
+  // hook for managing loading state during user authentication process
+  const loading = useAuthenticationLoading(user);
+
   return (
     <nav>
-      <ul>
+      <Ul>
         <li>
-          <Link href="/">Home</Link>
+          <A href="/">Home</A>
         </li>
-        <li>
-          <Link href="/about">About</Link>
-        </li>
-        <li>
-          <Link href="/profile">Profile</Link>
-        </li>
-      </ul>
+        
+        {loading
+          ? null
+          : user && (
+              <li>
+                <A href="/profile">Profile</A>
+              </li>
+            ) 
+        }
+        
+      </Ul>
     </nav>
   );
 };
