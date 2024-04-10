@@ -1,12 +1,37 @@
+'use client';
 
-import Link from 'next/link'
+import Link from 'next/link';
 import { UserAuth } from '@/context/AuthContext';
+import { useEffect, useState } from 'react';
 
 export const Navbar = () => {
+  const { user, googleSignIn, logOut } = UserAuth();
+  const [loading, setLoading] = useState(true);
 
-  const { user } = UserAuth()
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setLoading(false);
+    };
 
-  console.log(process.env.FIREBASE_API_KEY);
+    checkAuthentication();
+  }, [user]);
+
+  const handleSignIn = async () => {
+    try {
+      await googleSignIn();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await logOut();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <nav>
@@ -22,14 +47,16 @@ export const Navbar = () => {
         </li>
       </ul>
 
-      <ul>
-        <li>
-          LOGIN
-        </li>
-        <li>
-          LOGIN
-        </li>
-      </ul>
+      {loading ? null : user ? (
+        <div>
+          <p>Welcome</p>
+          <p onClick={handleSignOut}>LOGOUT</p>
+        </div>
+      ) : (
+        <ul>
+          <li onClick={handleSignIn}>SignIn</li>
+        </ul>
+      )}
     </nav>
   );
-}
+};
